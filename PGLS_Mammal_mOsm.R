@@ -1,4 +1,3 @@
-setwd("~/Documents/work/PhD/Tasks/Task2_Phenotyping/Analysis/phyenotypic_Analyses/R/myPhysiology/META")
 #useful packages
 library(ggpubr)
 library(Hmisc)
