@@ -29,8 +29,34 @@ dehydrated<-dehydrated[arvore_d$tip.label,] #ensure meta urine and arvore cortad
 arvore_bmr<-drop.tip(arvore, bmr_list$tree_not_data)
 bmr<-bmr[arvore_bmr$tip.label,] #ensure meta urine and arvore cortada are order the same way
 
+# GRAPHICAL ABSTRACT Mammal Review
+plotmetaUrine <- arrange(transform(metaUrine,Classification=factor(Classification,levels=c("Arid", "Semi-Arid", "Dry sub-humid", "Humid"))),Classification)
+osm_AI<-ggplot(plotmetaUrine, aes(x=AI, y=Max.mosm.Kg, color = Classification, label=Name)) + xlab("Mean annual aridity index (AI)") + ylab("Maximum urine osmolality (mOsm/Kg)") + 
+  geom_point(size=1) + 
+  geom_text(aes(label=ifelse(
+    Max.mosm.Kg ==9374 |
+      Max.mosm.Kg ==1880|
+      Max.mosm.Kg ==4650| 
+      Max.mosm.Kg ==2362|
+      Max.mosm.Kg ==1390|
+      Max.mosm.Kg ==4470| 
+      Max.mosm.Kg ==7767| 
+      Max.mosm.Kg ==6500|
+      Max.mosm.Kg ==3170|
+      Max.mosm.Kg ==2608|
+      Max.mosm.Kg ==9370|
+      Max.mosm.Kg ==8773|
+      Max.mosm.Kg ==4022 | 
+      Max.mosm.Kg ==3027 | 
+      Max.mosm.Kg ==837| 
+      Max.mosm.Kg ==537,
+    as.character(species),'')),hjust=0, vjust=0, size=2.9) +
+  scale_color_brewer(palette ="RdYlBu", direction=1) +
+  theme_cowplot()
+plotmetaUrine <- arrange(transform(metaUrine,Classification=factor(Classification,levels=c("Arid", "Semi-Arid", "Dry sub-humid", "Humid"))),Classification)
 
-#NORMALITY TEST
+
+#NORMALITY 
 osm<-ggqqplot(metaUrine$Max.mosm.Kg,  title = "Maximum urine osmolality (mOsm/Kg)") 
 logosm<-ggqqplot(log10(metaUrine$Max.mosm.Kg),  title = "Log10(Maximum urine osmolality)") 
 mass<-ggqqplot(metaUrine$body.mass.Kg, title = "Body mass (Kg)") 
@@ -162,12 +188,12 @@ arvore_cortada$AI<-metaUrine$AI
 plotTree(arvore_cortada,ftype="i",fsize=0.6,lwd=1)
 X2<-metaUrine[!duplicated(metaUrine[,'species']),]
 row.names(X2)<-unique(X2[,'species'])
-AI<-as.matrix(X2)[,14] #choosing the 3rd column of dataset X2
+AI<-as.matrix(X2)[,14] 
 mode(AI)<-'numeric' #should be a named numeric matrix
 str(X2) #continuous variables should be labeled as 'numeric'
 X2$AI<-as.numeric(X2$AI)
 AI<-AI[arvore_cortada$tip.label]
-mOsm<-as.matrix(X2)[,12] #choosing the 3rd column of dataset X2
+mOsm<-as.matrix(X2)[,12] 
 mode(mOsm)<-'numeric' #should be a named numeric matrix
 str(X2) #continuous variables should be labeled as 'numeric'
 X2$mOsm<-as.numeric(X2$mOsm)
@@ -178,43 +204,17 @@ grey<-setMap(osm,c( "#FFFFD4","#FED98E", "#FE9929", "#D95F0E", "#993404"))
 colormap(colormap = colormaps$viridis, nshades = 6, format = "hex",
          alpha = 1, reverse = FALSE)
 arid<-setMap(obj,c("#a50026", "#d73027", "#fee090", "#e0f3f8", "#abd9e9", "#74add1", "#4575b4", "#313695"))
-pdf(file = "AncRec_tree.pdf",   # The directory you want to save the file in
-    width = 10, # The width of the plot in inches
-    height = 13) # The height of the plot in inches
+pdf(file = "AncRec_tree.pdf",   #this corresponds to plot for Figure 1 in Mammal Review paper
+    width = 10, 
+    height = 13) 
 par(mfrow=c(1,2))
 plot(arid,lwd=c(3,7),outline=FALSE,xlim=c(-0.1,3), fsize=c(0.7,1),leg.txt="AI")
 plot(grey,lwd=c(3,7),outline=FALSE, direction="leftwards",ftype="off",xlim=c(0.1,3), leg.txt="mOsm")
-dev.off()
+dev.off() 
 
 
-# GRAPHICAL ABSTRACT Mammal Review
-plotmetaUrine <- arrange(transform(metaUrine,Classification=factor(Classification,levels=c("Arid", "Semi-Arid", "Dry sub-humid", "Humid"))),Classification)
-osm_AI<-ggplot(plotmetaUrine, aes(x=AI, y=Max.mosm.Kg, color = Classification, label=Name)) + xlab("Mean annual aridity index (AI)") + ylab("Maximum urine osmolality (mOsm/Kg)") + 
-  geom_point(size=1) + 
-  geom_text(aes(label=ifelse(
-    Max.mosm.Kg ==9374 |
-      Max.mosm.Kg ==1880|
-      Max.mosm.Kg ==4650| 
-      Max.mosm.Kg ==2362|
-      Max.mosm.Kg ==1390|
-      Max.mosm.Kg ==4470| 
-      Max.mosm.Kg ==7767| 
-      Max.mosm.Kg ==6500|
-      Max.mosm.Kg ==3170|
-      Max.mosm.Kg ==2608|
-      Max.mosm.Kg ==9370|
-      Max.mosm.Kg ==8773|
-      Max.mosm.Kg ==4022 | 
-      Max.mosm.Kg ==3027 | 
-      Max.mosm.Kg ==837| 
-      Max.mosm.Kg ==537,
-    as.character(species),'')),hjust=0, vjust=0, size=2.9) +
-  scale_color_brewer(palette ="RdYlBu", direction=1) +
-  theme_cowplot()
-plotmetaUrine <- arrange(transform(metaUrine,Classification=factor(Classification,levels=c("Arid", "Semi-Arid", "Dry sub-humid", "Humid"))),Classification)
 
-
-### PLOT for main figure in Mammal Review paper
+### PLOT for Figure 3 in Mammal Review paper
 plotmetaUrine <- arrange(transform(metaUrine,Classification=factor(Classification,levels=c("Arid", "Semi-Arid", "Dry sub-humid", "Humid"))),Classification)
 sp <- ggscatter(plotmetaUrine, x = "AI", y = "Max.mosm.Kg",
                 color = "Classification", palette = "jco",
