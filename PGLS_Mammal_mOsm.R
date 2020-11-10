@@ -230,23 +230,3 @@ library(cowplot)
 myplot<-plot_grid(xplot, sp, ncol = 1,labels = c("A", "B"))
 ggsave("myplot.tiff", myplot, "tiff", dpi=600, width=10, height=9, units="in")
 
-
-
-### BOX PLOT for Trends in Ecology and Evolution
-#all 
-plotmetaUrine <- arrange(transform(metaUrine,Classification=factor(Classification,levels=c("Arid", "Semi-Arid", "Dry sub-humid", "Humid"))),Classification)
-ggplot(plotmetaUrine, aes(x=Category, y=Max.mosm.Kg, fill=Classification)) + xlab("") + ylab("Maximum urine osmolality (mOsm/Kg)") + 
-  geom_boxplot() + 
-  scale_x_discrete(limits=c("Evader", "Evaporator", "Endurer")) +
-  scale_fill_manual(values=c("#FC4E07", "#C4961A", "#C3D7A4", "#00AFBB","#4E84C4")) +
-  theme_classic2()
-# dehydrated only
-plotmetadehydrated <- arrange(transform(dehydrated,Classification=factor(Classification,levels=c("Arid", "Semi-Arid", "Dry sub-humid", "Humid"))),Classification)
-treeReview<-ggplot(plotmetadehydrated, aes(x=Category, y=Max.mosm.Kg, fill=Classification)) + xlab("") + ylab("Maximum urine osmolality (mOsm/Kg)") + 
-  geom_boxplot() + 
-  scale_x_discrete(limits=c("Evader", "Evaporator", "Endurer")) +
-  scale_fill_manual(values=c("#FC4E07", "#C4961A", "#C3D7A4", "#00AFBB","#4E84C4")) +
-  theme_classic2()
-ggsave("treeReview.tiff", treeReview, "tiff", dpi=900, width=5, height=4, units="in")
-
-
